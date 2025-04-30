@@ -12,8 +12,8 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+// middeware
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
 const tasksHandler = require("./api/tasks").default;

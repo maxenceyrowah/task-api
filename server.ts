@@ -1,8 +1,18 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
+import cors from "cors";
 
 const express = require("express");
 const app = express();
 const port = 3000;
+
+// Configuration CORS
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

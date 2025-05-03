@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import path from "path";
 
 const express = require("express");
 const app = express();
@@ -23,8 +24,9 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./api/**/*.ts"], // Chemin vers les fichiers contenant les routes
+  apis: [path.join(__dirname, "./api/**/*.ts")], // Chemin absolu vers les fichiers contenant les routes
 };
+
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 // Configuration CORS
@@ -39,7 +41,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Route Swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/api-docs", swaggerUi.serve);
+app.get(
+  "/api-docs",
+  swaggerUi.setup(swaggerDocs, {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Task Manager API Documentation",
+  })
+);
 
 const tasksHandler = require("./api/tasks").default;
 

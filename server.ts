@@ -41,15 +41,30 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Route Swagger
-app.use("/api-docs", swaggerUi.serve);
-app.get(
+// Route Swagger avec configuration personnalisée
+const swaggerUiOptions = {
+  explorer: true,
+  swaggerOptions: {
+    urls: [
+      {
+        url: "/swagger.json",
+        name: "Task Manager API",
+      },
+    ],
+  },
+};
+
+// Route pour servir le fichier swagger.json
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerDocs);
+});
+
+// Route Swagger UI
+app.use(
   "/api-docs",
-  swaggerUi.setup(swaggerDocs, {
-    explorer: true,
-    customCss: ".swagger-ui .topbar { display: none }",
-    customSiteTitle: "Task Manager API Documentation",
-  })
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, swaggerUiOptions)
 );
 
 const tasksHandler = require("./api/tasks").default;

@@ -15,14 +15,6 @@ const swaggerOptions = {
       title: "Task Manager API",
       version: "1.0.0",
       description: "API documentation for Task Manager application",
-      contact: {
-        name: "API Support",
-        email: "support@example.com",
-      },
-      license: {
-        name: "MIT",
-        url: "https://opensource.org/licenses/MIT",
-      },
     },
     servers: [
       {
@@ -32,21 +24,6 @@ const swaggerOptions = {
         description: "API Server",
       },
     ],
-    tags: [
-      {
-        name: "Tasks",
-        description: "Operations related to tasks",
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
   },
   apis: [path.join(__dirname, "./api/**/*.ts")],
 };
@@ -64,46 +41,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Route pour servir le fichier swagger.json
-app.get("/swagger.json", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.send(swaggerDocs);
-});
-
-// Custom CSS pour Swagger UI
-const customCss = `
-  .swagger-ui .topbar { display: none }
-  .swagger-ui .info .title { color: #3b4151; font-size: 2em; }
-  .swagger-ui .info .description { font-size: 1.2em; }
-  .swagger-ui .opblock-tag { font-size: 1.2em; }
-  .swagger-ui .opblock { border-radius: 5px; }
-  .swagger-ui .opblock.opblock-get { background: rgba(97,175,254,.1); border-color: #61affe; }
-  .swagger-ui .opblock.opblock-post { background: rgba(73,204,144,.1); border-color: #49cc90; }
-  .swagger-ui .opblock.opblock-put { background: rgba(252,161,48,.1); border-color: #fca130; }
-  .swagger-ui .opblock.opblock-delete { background: rgba(249,62,62,.1); border-color: #f93e3e; }
-`;
-
-// Route Swagger UI avec configuration améliorée
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocs, {
-    customSiteTitle: "Task Manager API Documentation",
-    customfavIcon: "/favicon.ico",
-    customCss,
-    swaggerOptions: {
-      persistAuthorization: true,
-      docExpansion: "list",
-      defaultModelsExpandDepth: 1,
-      displayRequestDuration: true,
-      deepLinking: true,
-      filter: true,
-      showExtensions: true,
-      showCommonExtensions: true,
-      tryItOutEnabled: true,
-    },
-  })
-);
+// Route Swagger UI avec configuration par défaut
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const tasksHandler = require("./api/tasks").default;
 

@@ -50,8 +50,7 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
  * /api/tasks:
  *   get:
  *     summary: Récupère toutes les tâches
- *     description: Retourne la liste de toutes les tâches existantes
- *     tags: [Tasks]
+ *     description: Retourne la liste de toutes les tâches
  *     responses:
  *       200:
  *         description: Liste des tâches récupérée avec succès
@@ -60,7 +59,16 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Task'
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   completed:
+ *                     type: boolean
  *       500:
  *         description: Erreur serveur
  *         content:

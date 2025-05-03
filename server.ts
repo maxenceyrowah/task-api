@@ -41,30 +41,28 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Route Swagger avec configuration personnalisée
-const swaggerUiOptions = {
-  explorer: true,
-  swaggerOptions: {
-    urls: [
-      {
-        url: "/swagger.json",
-        name: "Task Manager API",
-      },
-    ],
-  },
-};
-
 // Route pour servir le fichier swagger.json
 app.get("/swagger.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(swaggerDocs);
 });
 
-// Route Swagger UI
+// Route Swagger UI avec configuration minimale
 app.use(
   "/api-docs",
   swaggerUi.serve,
-  swaggerUi.setup(swaggerDocs, swaggerUiOptions)
+  swaggerUi.setup(swaggerDocs, {
+    customSiteTitle: "Task Manager API",
+    customfavIcon: "/favicon.ico",
+    customCss: ".swagger-ui .topbar { display: none }",
+    swaggerOptions: {
+      persistAuthorization: true,
+      docExpansion: "none",
+      defaultModelsExpandDepth: -1,
+      displayRequestDuration: true,
+      deepLinking: true,
+    },
+  })
 );
 
 const tasksHandler = require("./api/tasks").default;
